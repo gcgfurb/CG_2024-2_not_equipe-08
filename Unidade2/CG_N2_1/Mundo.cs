@@ -77,7 +77,6 @@ namespace gcgcg
       GL.EnableVertexAttribArray(0);
       #endregion
       #region Objeto: circulo
-      Console.WriteLine("CG_BBox - exibe as BBox do objeto selecionado");
       double raio = 0.5;
       objetoSelecionado = new Circulo(mundo, ref rotuloAtual, raio, new Ponto4D(raio))
       {
