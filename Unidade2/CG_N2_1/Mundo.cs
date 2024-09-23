@@ -22,8 +22,6 @@ namespace gcgcg
     private Dictionary<char, Objeto> grafoLista = [];
     private Objeto objetoSelecionado = null;
 
-
-#if CG_Gizmo
     private readonly float[] _sruEixos =
     [
        0.0f,  0.0f,  0.0f, /* X- */      0.5f,  0.0f,  0.0f, /* X+ */
@@ -32,7 +30,6 @@ namespace gcgcg
     ];
     private int _vertexBufferObject_sruEixos;
     private int _vertexArrayObject_sruEixos;
-#endif
 
     private Shader _shaderVermelha;
     private Shader _shaderVerde;
@@ -52,21 +49,13 @@ namespace gcgcg
     {
       base.OnLoad();
 
-      Utilitario.Diretivas();
-#if CG_DEBUG      
-      Console.WriteLine("Tamanho interno da janela de desenho: " + ClientSize.X + "x" + ClientSize.Y);
-#endif
+      GL.ClearColor(0.5f, 0.1f, 0.5f, 1.0f);
 
-      GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-      #region Cores
       _shaderVermelha = new Shader("Shaders/shader.vert", "Shaders/shaderVermelha.frag");
       _shaderVerde = new Shader("Shaders/shader.vert", "Shaders/shaderVerde.frag");
       _shaderAzul = new Shader("Shaders/shader.vert", "Shaders/shaderAzul.frag");
       _shaderCiano = new Shader("Shaders/shader.vert", "Shaders/shaderCiano.frag");
-      #endregion
 
-#if CG_Gizmo
       #region Eixos: SRU  
       _vertexBufferObject_sruEixos = GL.GenBuffer();
       GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject_sruEixos);
@@ -76,63 +65,11 @@ namespace gcgcg
       GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
       GL.EnableVertexAttribArray(0);
       #endregion
-#endif
 
-      #region Objeto: polígono qualquer  
-      List<Ponto4D> pontosPoligono =
-      [
-        new Ponto4D(0.25, 0.25),
-        new Ponto4D(0.75, 0.25),
-        new Ponto4D(0.75, 0.75),
-        new Ponto4D(0.50, 0.50),
-        new Ponto4D(0.25, 0.75),
-      ];
-      objetoSelecionado = new Poligono(mundo, ref rotuloAtual, pontosPoligono);
-      #endregion
-      #region NÃO USAR: declara um objeto filho ao polígono
-      objetoSelecionado = new Ponto(objetoSelecionado, ref rotuloAtual, new Ponto4D(0.50, 0.75));
-      #endregion
-      #region Objeto: retângulo  
-      objetoSelecionado = new Retangulo(mundo, ref rotuloAtual, new Ponto4D(-0.25, 0.25), new Ponto4D(-0.75, 0.75))
-      {
-        PrimitivaTipo = PrimitiveType.LineLoop
-      };
-      #endregion
-      #region Objeto: segmento de reta  
-      objetoSelecionado = new SegReta(mundo, ref rotuloAtual, new Ponto4D(-0.25, -0.25), new Ponto4D(-0.75, -0.75));
-      #endregion
-      #region Objeto: ponto  
-      objetoSelecionado = new Ponto(mundo, ref rotuloAtual, new Ponto4D(0.25, -0.25))
-      {
-        PrimitivaTipo = PrimitiveType.Points,
-        PrimitivaTamanho = 10
-      };
-      #endregion
-
-#if CG_Privado
-      #region Objeto: circulo - origem
-      objetoSelecionado = new Circulo(mundo, ref rotuloAtual, 0.2)
-      {
-        ShaderObjeto = new Shader("Shaders/shader.vert", "Shaders/shaderAmarela.frag")
-      };
-      #endregion
       #region Objeto: circulo
-      objetoSelecionado = new Circulo(mundo, ref rotuloAtual, 0.1, new Ponto4D(0.0, -0.5))
-      {
-        ShaderObjeto = new Shader("Shaders/shader.vert", "Shaders/shaderAmarela.frag")
-      };
+      objetoSelecionado = new Circulo(mundo, ref rotuloAtual, 0.5);
+      objetoSelecionado.ShaderObjeto = new Shader("Shaders/shader.vert", "Shaders/shaderAmarela.frag");
       #endregion
-      #region Objeto: SrPalito  
-      objetoSelecionado = new SrPalito(mundo, ref rotuloAtual);
-      #endregion
-      #region Objeto: SplineBezier
-      objetoSelecionado = new SplineBezier(mundo, ref rotuloAtual);
-      #endregion
-      #region Objeto: SplineInter
-      objetoSelecionado = new SplineInter(mundo, ref rotuloAtual);
-      #endregion
-#endif
-
     }
 
     protected override void OnRenderFrame(FrameEventArgs e)
