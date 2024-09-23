@@ -1,33 +1,44 @@
+using System.Globalization;
 using CG_Biblioteca;
+using gcgcg;
 using OpenTK.Graphics.OpenGL4;
 
-namespace gcgcg
+internal class Circulo : Objeto
 {
-    public class Circulo : Objeto
+    private const int numberOfPoints = 72;
+    private const double increaseAngle = 360 / numberOfPoints;
+    private Ponto4D[] generatedCiclePoints = new Ponto4D[numberOfPoints];
+    public Circulo(Objeto _paiRef, ref char _rotulo, Objeto objetoFilho = null) : base(_paiRef, ref _rotulo, objetoFilho)
     {
-        public Circulo(Objeto _paiRef, ref char _rotulo) : this(_paiRef, ref _rotulo, 0.5, new Ponto4D())
-        {
+    }
 
-        }
+    public Circulo(Objeto _paiRef, ref char _rotulo, double _raio, Ponto4D ptoDeslocamento) : base(_paiRef, ref _rotulo)
+    {
+      PrimitivaTipo = PrimitiveType.Points;
+      PrimitivaTamanho = 5;
+      double drawingAngle = increaseAngle;
+      for (int i = 0; i < numberOfPoints; i++) {
+        Ponto4D ptoCircle = Matematica.GerarPtosCirculo(drawingAngle, _raio);
+        generatedCiclePoints[i] = new Ponto4D(ptoCircle.X, ptoCircle.Y);
+        ptoCircle.X += ptoDeslocamento.X;
+        ptoCircle.Y += ptoDeslocamento.Y;
+        PontosAdicionar(ptoCircle);
+        drawingAngle += increaseAngle;
+      }
+    }
 
-        public Circulo(Objeto _paiRef, ref char _rotulo, double _raio, Ponto4D ptoDeslocamento) : base(_paiRef, ref _rotulo)
-        {
-            PrimitivaTipo = PrimitiveType.Points;
-            PrimitivaTamanho = 5;
-            Atualizar(ptoDeslocamento);
-            int pontos = 72;
-            // como sao 72 pontos 360 / 72 = 5
-            double anguloCadaPonto = 5.0;
-            // comeca com 1 pois o primeiro ponto, no angulo 0, ja esta cadastrados
-            for (int i = 1; i < pontos; i++)
-            {
-                this.Atualizar(Matematica.GerarPtosCirculo(i * anguloCadaPonto, _raio));
-            }
-        }
-        public void Atualizar(Ponto4D ptoDeslocamento)
-        {
-            base.PontosAdicionar(ptoDeslocamento);
-        }
+    public void Atualizar(Ponto4D ptoDeslocamento)
+    {
+      PontosApagar();
+      double drawingAngle = increaseAngle;
+      for (int i = 0; i < numberOfPoints; i++) {
+        Ponto4D ptoCircle = generatedCiclePoints[i];
+        ptoCircle.X += ptoDeslocamento.X;
+        ptoCircle.Y += ptoDeslocamento.Y;
+        PontosAdicionar(ptoCircle);
+        drawingAngle += increaseAngle;
+      }
+    }
 
 #if CG_Debug
     public override string ToString()
@@ -38,6 +49,4 @@ namespace gcgcg
       return retorno;
     }
 #endif
-
-    }
 }

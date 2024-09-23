@@ -78,7 +78,7 @@ namespace gcgcg
       #endregion
       #region Objeto: circulo
       double raio = 0.5;
-      objetoSelecionado = new Circulo(mundo, ref rotuloAtual, raio, new Ponto4D(raio))
+      objetoSelecionado = new Circulo(mundo, ref rotuloAtual, raio, new Ponto4D())
       {
         ShaderObjeto = new Shader("Shaders/shader.vert", "Shaders/shaderAmarela.frag")
       };
