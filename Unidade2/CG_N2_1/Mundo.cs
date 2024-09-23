@@ -57,7 +57,7 @@ namespace gcgcg
       Console.WriteLine("Tamanho interno da janela de desenho: " + ClientSize.X + "x" + ClientSize.Y);
 #endif
 
-      GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+      GL.ClearColor(0.50196f, 0.50196f, 0.70196f, 1.0f);
 
       #region Cores
       _shaderVermelha = new Shader("Shaders/shader.vert", "Shaders/shaderVermelha.frag");
@@ -76,60 +76,13 @@ namespace gcgcg
       GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
       GL.EnableVertexAttribArray(0);
       #endregion
-#endif
-
-      #region Objeto: polígono qualquer  
-      List<Ponto4D> pontosPoligono =
-      [
-        new Ponto4D(0.25, 0.25),
-        new Ponto4D(0.75, 0.25),
-        new Ponto4D(0.75, 0.75),
-        new Ponto4D(0.50, 0.50),
-        new Ponto4D(0.25, 0.75),
-      ];
-      objetoSelecionado = new Poligono(mundo, ref rotuloAtual, pontosPoligono);
-      #endregion
-      #region NÃO USAR: declara um objeto filho ao polígono
-      objetoSelecionado = new Ponto(objetoSelecionado, ref rotuloAtual, new Ponto4D(0.50, 0.75));
-      #endregion
-      #region Objeto: retângulo  
-      objetoSelecionado = new Retangulo(mundo, ref rotuloAtual, new Ponto4D(-0.25, 0.25), new Ponto4D(-0.75, 0.75))
-      {
-        PrimitivaTipo = PrimitiveType.LineLoop
-      };
-      #endregion
-      #region Objeto: segmento de reta  
-      objetoSelecionado = new SegReta(mundo, ref rotuloAtual, new Ponto4D(-0.25, -0.25), new Ponto4D(-0.75, -0.75));
-      #endregion
-      #region Objeto: ponto  
-      objetoSelecionado = new Ponto(mundo, ref rotuloAtual, new Ponto4D(0.25, -0.25))
-      {
-        PrimitivaTipo = PrimitiveType.Points,
-        PrimitivaTamanho = 10
-      };
-      #endregion
-
-#if CG_Privado
-      #region Objeto: circulo - origem
-      objetoSelecionado = new Circulo(mundo, ref rotuloAtual, 0.2)
-      {
-        ShaderObjeto = new Shader("Shaders/shader.vert", "Shaders/shaderAmarela.frag")
-      };
-      #endregion
       #region Objeto: circulo
-      objetoSelecionado = new Circulo(mundo, ref rotuloAtual, 0.1, new Ponto4D(0.0, -0.5))
+      Console.WriteLine("CG_BBox - exibe as BBox do objeto selecionado");
+      double raio = 0.5;
+      objetoSelecionado = new Circulo(mundo, ref rotuloAtual, raio, new Ponto4D(raio))
       {
         ShaderObjeto = new Shader("Shaders/shader.vert", "Shaders/shaderAmarela.frag")
       };
-      #endregion
-      #region Objeto: SrPalito  
-      objetoSelecionado = new SrPalito(mundo, ref rotuloAtual);
-      #endregion
-      #region Objeto: SplineBezier
-      objetoSelecionado = new SplineBezier(mundo, ref rotuloAtual);
-      #endregion
-      #region Objeto: SplineInter
-      objetoSelecionado = new SplineInter(mundo, ref rotuloAtual);
       #endregion
 #endif
 
@@ -157,70 +110,6 @@ namespace gcgcg
       var estadoTeclado = KeyboardState;
       if (estadoTeclado.IsKeyDown(Keys.Escape))
         Close();
-
-      if (estadoTeclado.IsKeyPressed(Keys.Space))
-        objetoSelecionado = Grafocena.GrafoCenaProximo(mundo, objetoSelecionado, grafoLista);
-
-      if (estadoTeclado.IsKeyPressed(Keys.G))
-        Grafocena.GrafoCenaImprimir(mundo, grafoLista);
-      if (estadoTeclado.IsKeyPressed(Keys.P))
-      {
-        if (objetoSelecionado != null)
-          Console.WriteLine(objetoSelecionado);
-        else
-          Console.WriteLine("objetoSelecionado: MUNDO \n__________________________________\n");
-      }
-
-      if (estadoTeclado.IsKeyPressed(Keys.C) && objetoSelecionado != null)
-      {
-        objetoSelecionado.ShaderObjeto = _shaderCiano;
-      }
-
-      if (estadoTeclado.IsKeyPressed(Keys.Right) && objetoSelecionado != null)
-      {
-        if (objetoSelecionado.PontosListaTamanho > 0)
-        {
-          objetoSelecionado.PontosAlterar(new Ponto4D(objetoSelecionado.PontosId(0).X + 0.005, objetoSelecionado.PontosId(0).Y, 0), 0);
-          objetoSelecionado.ObjetoAtualizar();
-        }
-      }
-
-      if (estadoTeclado.IsKeyPressed(Keys.R) && objetoSelecionado != null)
-      {
-        //FIXME: Spline limpa os pontos da Spline, mas não limpa pontos e poliedro de controle 
-        objetoSelecionado.PontosApagar();
-      }
-      #endregion
-
-      #region  Mouse
-      int janelaLargura = ClientSize.X;
-      int janelaAltura = ClientSize.Y;
-      Ponto4D mousePonto = new(MousePosition.X, MousePosition.Y);
-      Ponto4D sruPonto = Utilitario.NDC_TelaSRU(janelaLargura, janelaAltura, mousePonto);
-
-      if (estadoTeclado.IsKeyPressed(Keys.LeftShift))
-      {
-        if (mouseMovtoPrimeiro)
-        {
-          mouseMovtoUltimo = sruPonto;
-          mouseMovtoPrimeiro = false;
-        }
-        else
-        {
-          var deltaX = sruPonto.X - mouseMovtoUltimo.X;
-          var deltaY = sruPonto.Y - mouseMovtoUltimo.Y;
-          mouseMovtoUltimo = sruPonto;
-
-          objetoSelecionado.PontosAlterar(new Ponto4D(objetoSelecionado.PontosId(0).X + deltaX, objetoSelecionado.PontosId(0).Y + deltaY, 0), 0);
-          objetoSelecionado.ObjetoAtualizar();
-        }
-      }
-      if (estadoTeclado.IsKeyDown(Keys.LeftShift))
-      {
-        objetoSelecionado.PontosAlterar(sruPonto, 0);
-        objetoSelecionado.ObjetoAtualizar();
-      }
-
       #endregion
     }
 
