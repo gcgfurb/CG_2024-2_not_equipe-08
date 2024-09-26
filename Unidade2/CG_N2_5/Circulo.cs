@@ -2,13 +2,11 @@ using System.Globalization;
 using CG_Biblioteca;
 using gcgcg;
 using OpenTK.Graphics.OpenGL4;
-using System;
 
 internal class Circulo : Objeto
 {
     private const int numberOfPoints = 72;
     private const double increaseAngle = 360 / numberOfPoints;
-    private double raio;
     private Ponto4D[] generatedCiclePoints = new Ponto4D[numberOfPoints];
     public Circulo(Objeto _paiRef, ref char _rotulo, Objeto objetoFilho = null) : base(_paiRef, ref _rotulo, objetoFilho)
     {
@@ -18,20 +16,26 @@ internal class Circulo : Objeto
     {
       PrimitivaTipo = PrimitiveType.Points;
       PrimitivaTamanho = 5;
-      raio = _raio;
-      Atualizar(ptoDeslocamento);
+      double drawingAngle = increaseAngle;
+      for (int i = 0; i < numberOfPoints; i++) {
+        Ponto4D ptoCircle = Matematica.GerarPtosCirculo(drawingAngle, _raio);
+        generatedCiclePoints[i] = new Ponto4D(ptoCircle.X, ptoCircle.Y);
+        ptoCircle.X += ptoDeslocamento.X;
+        ptoCircle.Y += ptoDeslocamento.Y;
+        PontosAdicionar(ptoCircle);
+        drawingAngle += increaseAngle;
+      }
     }
 
     public void Atualizar(Ponto4D ptoDeslocamento)
     {
       PontosApagar();
-      double drawingAngle = increaseAngle;
       for (int i = 0; i < numberOfPoints; i++) {
-        Ponto4D ptoCircle = Matematica.GerarPtosCirculo(drawingAngle, raio);
-        ptoCircle.X += ptoDeslocamento.X;
-        ptoCircle.Y += ptoDeslocamento.Y;
-        PontosAdicionar(ptoCircle);
-        drawingAngle += increaseAngle;
+        Ponto4D ptoCircle = generatedCiclePoints[i];
+        Ponto4D ptoCircleNovo = new Ponto4D();
+        ptoCircleNovo.X += ptoDeslocamento.X + ptoCircle.X;
+        ptoCircleNovo.Y += ptoDeslocamento.Y + ptoCircle.Y;
+        PontosAdicionar(ptoCircleNovo);
       }
     }
 

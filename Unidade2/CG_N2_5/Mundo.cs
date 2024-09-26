@@ -19,8 +19,6 @@ namespace gcgcg
     private static Objeto mundo = null;
 
     private char rotuloAtual = '?';
-    private Dictionary<char, Objeto> grafoLista = [];
-    private Objeto objetoSelecionado = null;
 
 
 #if CG_Gizmo
@@ -38,9 +36,10 @@ namespace gcgcg
     private Shader _shaderVerde;
     private Shader _shaderAzul;
     private Shader _shaderCiano;
-    private Circulo circuloMenor = null;
-    private Ponto ponto = null;
-    private Retangulo quadrado = null;
+    private Circulo joyStickLimit = null;
+    private Circulo joyStick = null;
+    private Ponto joyStickCenter = null;
+    private Retangulo bboxInterna = null;
     private double joyStickCenterX = 0.3;
     private double joyStickCenterY = 0.3;
     private Ponto4D joyStickCenterInit = new Ponto4D(0.3, 0.3);         
@@ -82,24 +81,25 @@ namespace gcgcg
       #endregion
       #region Objeto: BBox dos círculos
       double raio = 0.3;
-      objetoSelecionado = new Circulo(mundo, ref rotuloAtual, raio, joyStickCenterInit)
+      joyStickLimit = new Circulo(mundo, ref rotuloAtual, raio, joyStickCenterInit)
       {
             PrimitivaTipo = PrimitiveType.LineLoop
       };
       var pontoInf = Matematica.GerarPtosCirculo(225, 0.3);
       var pontoSup = Matematica.GerarPtosCirculo(45, 0.3);
-      quadrado = new Retangulo(objetoSelecionado, ref rotuloAtual, 
+      bboxInterna = new Retangulo(mundo, ref rotuloAtual, 
             new Ponto4D(pontoInf.X + joyStickCenterInit.X, pontoInf.Y + joyStickCenterInit.Y),
             new Ponto4D(pontoSup.X + joyStickCenterInit.X, pontoSup.Y + joyStickCenterInit.Y))
       {
             PrimitivaTipo = PrimitiveType.LineLoop
       };
-      circuloMenor = new Circulo(objetoSelecionado, ref rotuloAtual, 0.1, joyStickCenterInit)
+      mundo.Desenhar(new Transformacao4D(), bboxInterna);
+      joyStick = new Circulo(mundo, ref rotuloAtual, 0.1, joyStickCenterInit)
       {
             PrimitivaTipo = PrimitiveType.LineLoop
       };
 
-      ponto = new Ponto(objetoSelecionado, ref rotuloAtual, joyStickCenterInit)
+      joyStickCenter = new Ponto(mundo, ref rotuloAtual, joyStickCenterInit)
       {
             PrimitivaTamanho = 10
       };
@@ -108,14 +108,10 @@ namespace gcgcg
 #endif
 
     }
-    public void Atualizar(Ponto4D ptoDeslocamento) 
+    public void MoverJoyStick(Ponto4D ptoDeslocamento) 
     {
-      if (joyStickCenterX == ptoDeslocamento.X && joyStickCenterY == ptoDeslocamento.Y) return;
-      joyStickCenterX = ptoDeslocamento.X;
-      joyStickCenterY = ptoDeslocamento.Y;
-      circuloMenor.Atualizar(ptoDeslocamento);
-      ponto.PontosAlterar(ptoDeslocamento, 0);
-
+      joyStick.Atualizar(ptoDeslocamento);
+      joyStickCenter.PontosAlterar(ptoDeslocamento, 0);
     }
 
     protected override void OnRenderFrame(FrameEventArgs e)
@@ -124,7 +120,7 @@ namespace gcgcg
 
       GL.Clear(ClearBufferMask.ColorBufferBit);
 
-      mundo.Desenhar(new Transformacao4D(), objetoSelecionado);
+      mundo.Desenhar(new Transformacao4D(), joyStickLimit);
 
 #if CG_Gizmo
       Gizmo_Sru3D();
@@ -138,7 +134,7 @@ namespace gcgcg
 
       #region Teclado
       var input = KeyboardState;
-      var newPto = new Ponto4D(joyStickCenterX, joyStickCenterY);
+      var newJoyStickCenter = new Ponto4D(joyStickCenterX, joyStickCenterY);
 
       if (input.IsKeyPressed(Keys.Escape))
       {
@@ -148,27 +144,33 @@ namespace gcgcg
       
       if (input.IsKeyPressed(Keys.D))
       {
-            newPto.X += 0.01;
+            newJoyStickCenter.X += 0.01;
       }
       if (input.IsKeyPressed(Keys.E))
       {
-            newPto.X -= 0.01;
+            newJoyStickCenter.X -= 0.01;
       }
       if (input.IsKeyPressed(Keys.C))
       {
-            newPto.Y += 0.01;
+            newJoyStickCenter.Y += 0.01;
       }
       if (input.IsKeyPressed(Keys.B))
       {
-            newPto.Y -= 0.01;
+            newJoyStickCenter.Y -= 0.01;
       }              
-
-      if (quadrado.Bbox().Dentro(newPto))
+      if (joyStickCenterX == newJoyStickCenter.X && joyStickCenterY == newJoyStickCenter.Y) return;
+      joyStickCenterX = newJoyStickCenter.X;
+      joyStickCenterY = newJoyStickCenter.Y;
+      if (bboxInterna.Bbox().Dentro(newJoyStickCenter))
       {
-            quadrado.PrimitivaTipo = PrimitiveType.LineLoop;
-            Atualizar(newPto); 
+            bboxInterna.PrimitivaTipo = PrimitiveType.LineLoop;
+            MoverJoyStick(newJoyStickCenter); 
       }
-      else if(Matematica.DistanciaQuadrado(joyStickCenterInit, newPto) < Math.Pow(0.3, 2)) Atualizar(newPto);
+      else if(Matematica.DistanciaQuadrado(joyStickCenterInit, newJoyStickCenter) < Math.Pow(0.3, 2))
+      {
+            bboxInterna.PrimitivaTipo = PrimitiveType.Points;
+            MoverJoyStick(newJoyStickCenter);
+      }
       #endregion
     }
 
