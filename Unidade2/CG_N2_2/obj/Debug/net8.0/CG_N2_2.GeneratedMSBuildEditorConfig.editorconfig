@@ -11,7 +11,12 @@ build_property.InvariantGlobalization =
 build_property.PlatformNeutralAssembly = 
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
+<<<<<<<< HEAD:Unidade2/CG_N2_2/obj/Debug/net8.0/CG_N2_2.GeneratedMSBuildEditorConfig.editorconfig
 build_property.RootNamespace = CG_N2_2
 build_property.ProjectDir = C:\Projetos\CG_2024-2_not_equipe-08\Unidade2\CG_N2_2\
+========
+build_property.RootNamespace = CG_N2_1
+build_property.ProjectDir = D:\furb\computacao-grafica\CG_2024-2_not_equipe-08\Unidade2\CG_N2_1\
+>>>>>>>> origin/main:Unidade2/CG_N2_1/obj/Debug/net8.0/CG_N2_1.GeneratedMSBuildEditorConfig.editorconfig
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

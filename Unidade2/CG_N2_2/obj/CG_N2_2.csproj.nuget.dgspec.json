@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
+<<<<<<<< HEAD:Unidade2/CG_N2_2/obj/CG_N2_2.csproj.nuget.dgspec.json
     "C:\\Projetos\\CG_2024-2_not_equipe-08\\Unidade2\\CG_N2_2\\CG_N2_2.csproj": {}
+========
+    "D:\\furb\\computacao-grafica\\CG_2024-2_not_equipe-08\\Unidade2\\CG_N2_1\\CG_N2_1.csproj": {}
+>>>>>>>> origin/main:Unidade2/CG_N2_1/obj/CG_N2_1.csproj.nuget.dgspec.json
   },
   "projects": {
-    "C:\\Projetos\\CG_2024-2_not_equipe-08\\CG_Biblioteca\\CG_Biblioteca.csproj": {
+    "D:\\furb\\computacao-grafica\\CG_2024-2_not_equipe-08\\CG_Biblioteca\\CG_Biblioteca.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Projetos\\CG_2024-2_not_equipe-08\\CG_Biblioteca\\CG_Biblioteca.csproj",
+        "projectUniqueName": "D:\\furb\\computacao-grafica\\CG_2024-2_not_equipe-08\\CG_Biblioteca\\CG_Biblioteca.csproj",
         "projectName": "CG_Biblioteca",
-        "projectPath": "C:\\Projetos\\CG_2024-2_not_equipe-08\\CG_Biblioteca\\CG_Biblioteca.csproj",
-        "packagesPath": "C:\\Users\\spyke\\.nuget\\packages\\",
-        "outputPath": "C:\\Projetos\\CG_2024-2_not_equipe-08\\CG_Biblioteca\\obj\\",
+        "projectPath": "D:\\furb\\computacao-grafica\\CG_2024-2_not_equipe-08\\CG_Biblioteca\\CG_Biblioteca.csproj",
+        "packagesPath": "C:\\Users\\rafae\\.nuget\\packages\\",
+        "outputPath": "D:\\furb\\computacao-grafica\\CG_2024-2_not_equipe-08\\CG_Biblioteca\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\spyke\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\rafae\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -72,6 +76,7 @@
         }
       }
     },
+<<<<<<<< HEAD:Unidade2/CG_N2_2/obj/CG_N2_2.csproj.nuget.dgspec.json
     "C:\\Projetos\\CG_2024-2_not_equipe-08\\Unidade2\\CG_N2_2\\CG_N2_2.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -80,9 +85,19 @@
         "projectPath": "C:\\Projetos\\CG_2024-2_not_equipe-08\\Unidade2\\CG_N2_2\\CG_N2_2.csproj",
         "packagesPath": "C:\\Users\\spyke\\.nuget\\packages\\",
         "outputPath": "C:\\Projetos\\CG_2024-2_not_equipe-08\\Unidade2\\CG_N2_2\\obj\\",
+========
+    "D:\\furb\\computacao-grafica\\CG_2024-2_not_equipe-08\\Unidade2\\CG_N2_1\\CG_N2_1.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\furb\\computacao-grafica\\CG_2024-2_not_equipe-08\\Unidade2\\CG_N2_1\\CG_N2_1.csproj",
+        "projectName": "CG_N2_1",
+        "projectPath": "D:\\furb\\computacao-grafica\\CG_2024-2_not_equipe-08\\Unidade2\\CG_N2_1\\CG_N2_1.csproj",
+        "packagesPath": "C:\\Users\\rafae\\.nuget\\packages\\",
+        "outputPath": "D:\\furb\\computacao-grafica\\CG_2024-2_not_equipe-08\\Unidade2\\CG_N2_1\\obj\\",
+>>>>>>>> origin/main:Unidade2/CG_N2_1/obj/CG_N2_1.csproj.nuget.dgspec.json
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\spyke\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\rafae\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -94,8 +109,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Projetos\\CG_2024-2_not_equipe-08\\CG_Biblioteca\\CG_Biblioteca.csproj": {
-                "projectPath": "C:\\Projetos\\CG_2024-2_not_equipe-08\\CG_Biblioteca\\CG_Biblioteca.csproj"
+              "D:\\furb\\computacao-grafica\\CG_2024-2_not_equipe-08\\CG_Biblioteca\\CG_Biblioteca.csproj": {
+                "projectPath": "D:\\furb\\computacao-grafica\\CG_2024-2_not_equipe-08\\CG_Biblioteca\\CG_Biblioteca.csproj"
               }
             }
           }
