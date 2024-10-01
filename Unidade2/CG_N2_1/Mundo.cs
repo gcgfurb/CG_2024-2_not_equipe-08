@@ -16,10 +16,10 @@ namespace gcgcg
 {
   public class Mundo : GameWindow
   {
+    private static readonly string SHADER_VERT = "Shaders/shader.vert";
     private static Objeto mundo = null;
 
     private char rotuloAtual = '?';
-    private Dictionary<char, Objeto> grafoLista = [];
     private Objeto objetoSelecionado = null;
 
 
@@ -37,10 +37,7 @@ namespace gcgcg
     private Shader _shaderVermelha;
     private Shader _shaderVerde;
     private Shader _shaderAzul;
-    private Shader _shaderCiano;
-
-    private bool mouseMovtoPrimeiro = true;
-    private Ponto4D mouseMovtoUltimo;
+    private Shader _shaderAmarela;
 
     public Mundo(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
       : base(gameWindowSettings, nativeWindowSettings)
@@ -60,10 +57,10 @@ namespace gcgcg
       GL.ClearColor(0.50196f, 0.50196f, 0.70196f, 1.0f);
 
       #region Cores
-      _shaderVermelha = new Shader("Shaders/shader.vert", "Shaders/shaderVermelha.frag");
-      _shaderVerde = new Shader("Shaders/shader.vert", "Shaders/shaderVerde.frag");
-      _shaderAzul = new Shader("Shaders/shader.vert", "Shaders/shaderAzul.frag");
-      _shaderCiano = new Shader("Shaders/shader.vert", "Shaders/shaderCiano.frag");
+      _shaderVermelha = new Shader(SHADER_VERT, "Shaders/shaderVermelha.frag");
+      _shaderVerde = new Shader(SHADER_VERT, "Shaders/shaderVerde.frag");
+      _shaderAzul = new Shader(SHADER_VERT, "Shaders/shaderAzul.frag");
+      _shaderAmarela = new Shader(SHADER_VERT, "Shaders/shaderAmarela.frag");
       #endregion
 
 #if CG_Gizmo
@@ -78,10 +75,8 @@ namespace gcgcg
       #endregion
       #region Objeto: circulo
       double raio = 0.5;
-      objetoSelecionado = new Circulo(mundo, ref rotuloAtual, raio, new Ponto4D())
-      {
-        ShaderObjeto = new Shader("Shaders/shader.vert", "Shaders/shaderAmarela.frag")
-      };
+      objetoSelecionado = new Circulo(mundo, ref rotuloAtual, raio, new Ponto4D());
+      objetoSelecionado.ShaderObjeto = _shaderAmarela;
       #endregion
 #endif
 
@@ -138,7 +133,7 @@ namespace gcgcg
       GL.DeleteProgram(_shaderVermelha.Handle);
       GL.DeleteProgram(_shaderVerde.Handle);
       GL.DeleteProgram(_shaderAzul.Handle);
-      GL.DeleteProgram(_shaderCiano.Handle);
+      GL.DeleteProgram(_shaderAmarela.Handle);
 
       base.OnUnload();
     }
