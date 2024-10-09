@@ -123,10 +123,6 @@ namespace gcgcg
         ((Ponto) objetoSelecionado).ponto.X += 0.05f;
         ((Ponto) objetoSelecionado).Atualizar();
       }
-      if (estadoTeclado.IsKeyPressed(Keys.D)) {
-        ((Ponto) objetoSelecionado).ponto.X += 0.05f;
-        ((Ponto) objetoSelecionado).Atualizar();
-      }
       if (estadoTeclado.IsKeyPressed(Keys.Space)) {
         objetoSelecionado = point_list[point_list_index];
         point_list_index = (point_list_index + 1)%point_list.Count;
