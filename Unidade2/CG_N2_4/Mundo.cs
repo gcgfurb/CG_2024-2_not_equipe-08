@@ -21,7 +21,10 @@ namespace gcgcg
     private char rotuloAtual = '?';
     private Dictionary<char, Objeto> grafoLista = [];
     private Objeto objetoSelecionado = null;
+    private Ponto4D pontoSelecionado = null;
     private List<Ponto> point_list = new List<Ponto>();
+    private List<Ponto4D> point4D_list = new List<Ponto4D>();
+    private List<SegReta> segReta_list = new List<SegReta>();
     private int point_list_index = 0;
 
     private readonly float[] _sruEixos =
@@ -37,6 +40,7 @@ namespace gcgcg
     private Shader _shaderVerde;
     private Shader _shaderAzul;
     private Shader _shaderCiano;
+    private Shader _shaderBranca;
 
     private bool mouseMovtoPrimeiro = true;
     private Ponto4D mouseMovtoUltimo;
@@ -57,6 +61,7 @@ namespace gcgcg
       _shaderVerde = new Shader("Shaders/shader.vert", "Shaders/shaderVerde.frag");
       _shaderAzul = new Shader("Shaders/shader.vert", "Shaders/shaderAzul.frag");
       _shaderCiano = new Shader("Shaders/shader.vert", "Shaders/shaderCiano.frag");
+      _shaderBranca = new Shader("Shaders/shader.vert", "Shaders/shaderBranca.frag"); 
 
       #region Eixos: SRU  
       _vertexBufferObject_sruEixos = GL.GenBuffer();
@@ -68,20 +73,40 @@ namespace gcgcg
       GL.EnableVertexAttribArray(0);
       #endregion
 
-      #region Objeto: ponto
-      Ponto point = new Ponto(mundo, ref rotuloAtual, new Ponto4D(0.5, 0.0));
-      point.ShaderObjeto = _shaderVermelha;
-      point_list.Add(point);
+      point4D_list.Add(new Ponto4D(0.5, -0.5));
+      point4D_list.Add(new Ponto4D(0.5, 0.5));
+      point4D_list.Add(new Ponto4D(-0.5, 0.5));
+      point4D_list.Add(new Ponto4D(-0.5, -0.5));
 
-      point = new Ponto(mundo, ref rotuloAtual, new Ponto4D(0.0, 0.5));
-      point.ShaderObjeto = _shaderVermelha;
-      point_list.Add(point);
+      pontoSelecionado = point4D_list[3];
 
-      point = new Ponto(mundo, ref rotuloAtual, new Ponto4D(0.0, 0.0));
-      point.ShaderObjeto = _shaderVermelha;
-      point_list.Add(point);
+      #region Objeto: Ponto
+      point_list.Add(new Ponto(mundo, ref rotuloAtual, point4D_list[0]));
+      point_list.Add(new Ponto(mundo, ref rotuloAtual, point4D_list[1]));
+      point_list.Add(new Ponto(mundo, ref rotuloAtual, point4D_list[2]));
+      point_list.Add(new Ponto(mundo, ref rotuloAtual, point4D_list[3]));
+      point_list[3].ShaderObjeto = _shaderVermelha;
+      #endregion
 
-      objetoSelecionado = point;
+      #region Objeto: SegReta
+      SegReta segreta = new SegReta(mundo, ref rotuloAtual, point_list[0].ponto, point_list[1].ponto);
+      segreta.ShaderObjeto = _shaderCiano;
+      segReta_list.Add(segreta);
+      segreta = new SegReta(mundo, ref rotuloAtual, point_list[1].ponto, point_list[2].ponto);
+      segreta.ShaderObjeto = _shaderCiano;
+      segReta_list.Add(segreta);
+      segreta = new SegReta(mundo, ref rotuloAtual, point_list[2].ponto, point_list[3].ponto);
+      segreta.ShaderObjeto = _shaderCiano;
+      segReta_list.Add(segreta);
+      #endregion
+
+      #region Objeto: Spline
+      Spline spline = new Spline(mundo, ref rotuloAtual);
+      spline.AtualizarSpline(point4D_list[3], true);
+      spline.AtualizarSpline(point4D_list[2], true);
+      spline.AtualizarSpline(point4D_list[1], true);
+      spline.AtualizarSpline(point4D_list[0], false);
+      objetoSelecionado = spline;
       #endregion
     }
 
@@ -99,6 +124,18 @@ namespace gcgcg
       SwapBuffers();
     }
 
+    private void UpdateComponents() {
+      int index = point4D_list.IndexOf(pontoSelecionado);
+      point_list[index].Atualizar();
+      if (index < 3) {
+        segReta_list[index].ObjetoAtualizar();
+      }
+      if (index > 0) {
+        segReta_list[index - 1].ObjetoAtualizar();
+      }
+      ((Spline) objetoSelecionado).Atualizar();
+    }
+
     protected override void OnUpdateFrame(FrameEventArgs e)
     {
       base.OnUpdateFrame(e);
@@ -108,28 +145,33 @@ namespace gcgcg
       if (estadoTeclado.IsKeyDown(Keys.Escape))
         Close();
       if (estadoTeclado.IsKeyPressed(Keys.C)) {
-        ((Ponto) objetoSelecionado).ponto.Y += 0.05f;
-        ((Ponto) objetoSelecionado).Atualizar();
+        pontoSelecionado.Y += 0.05f;
+        UpdateComponents();
       }
       if (estadoTeclado.IsKeyPressed(Keys.B)) {
-        ((Ponto) objetoSelecionado).ponto.Y -= 0.05f;
-        ((Ponto) objetoSelecionado).Atualizar();
+        pontoSelecionado.Y -= 0.05f;
+        UpdateComponents();
       }
       if (estadoTeclado.IsKeyPressed(Keys.E)) {
-        ((Ponto) objetoSelecionado).ponto.X -= 0.05f;
-        ((Ponto) objetoSelecionado).Atualizar();
+        pontoSelecionado.X -= 0.05f;
+        UpdateComponents();
       }
       if (estadoTeclado.IsKeyPressed(Keys.D)) {
-        ((Ponto) objetoSelecionado).ponto.X += 0.05f;
-        ((Ponto) objetoSelecionado).Atualizar();
+        pontoSelecionado.X += 0.05f;
+        UpdateComponents();
       }
       if (estadoTeclado.IsKeyPressed(Keys.Space)) {
-        objetoSelecionado = point_list[point_list_index];
+        int index = point4D_list.IndexOf(pontoSelecionado);
+        point_list[index].ShaderObjeto =  _shaderBranca;
+        pontoSelecionado = point4D_list[point_list_index];
+        point_list[point_list_index].ShaderObjeto = _shaderVermelha;
         point_list_index = (point_list_index + 1)%point_list.Count;
       }
       if (estadoTeclado.IsKeyPressed(Keys.Equal)) {
+        ((Spline) objetoSelecionado).SplineQtdPto(1);
       }
       if (estadoTeclado.IsKeyPressed(Keys.Minus)) {
+        ((Spline) objetoSelecionado).SplineQtdPto(-1);
       }
       if (estadoTeclado.IsKeyPressed(Keys.G))
         Grafocena.GrafoCenaImprimir(mundo, grafoLista);
