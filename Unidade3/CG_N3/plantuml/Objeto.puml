@@ -1,0 +1,37 @@
+@startuml
+class Objeto {
+    + Rotulo : char <<get>>
+    + PrimitivaTamanho : float <<get>> <<set>>
+    + PontosListaTamanho : int <<get>>
+    + Bbox() : BBox
+    + Objeto(_paiRef:Objeto, _rotulo:char, objetoFilho:Objeto)
+    + ObjetoRemover() : void
+    + ObjetoAtualizar() : void
+    + ObjetoMatrizGlobal(matrizGlobalPai:Transformacao4D) : Transformacao4D
+    + Desenhar(matrizGrafo:Transformacao4D, objetoSelecionado:Objeto) : void
+    + FilhoAdicionar(filho:Objeto) : void
+    + PontosId(id:int) : Ponto4D
+    + PontosRemover(posicao:int) : void
+    + PontosAdicionar(pto:Ponto4D) : void
+    + PontosAlterar(pto:Ponto4D, posicao:int) : void
+    + PontosApagar() : void
+    + MatrizGlobalInversa(mousePto:Ponto4D) : Ponto4D
+    + PontoMaisPerto(mousePto:Ponto4D, remover:bool) : int
+    + GrafocenaBusca(_rotulo:char) : Objeto
+    + GrafocenaAtualizar(lista:Dictionary<char, Objeto>) : Dictionary<char, Objeto>
+    + GrafocenaImprimir(idt:string) : void
+    + MatrizImprimir() : void
+    + MatrizAtribuirIdentidade() : void
+    + MatrizTranslacaoXYZ(tx:double, ty:double, tz:double) : void
+    + MatrizEscalaXYZ(Sx:double, Sy:double, Sz:double) : void
+    + MatrizEscalaXYZBBox(Sx:double, Sy:double, Sz:double) : void
+    + MatrizRotacaoEixo(angulo:double) : void
+    + MatrizRotacao(angulo:double) : void
+    + MatrizRotacaoZBBox(angulo:double) : void
+    + OnUnload() : void
+    + ScanLine(ptoClique:Ponto4D, objetoSelecionado:Objeto) : bool
+    + GetMatrizGlobal() : Transformacao4D
+}
+Objeto --> "PrimitivaTipo" PrimitiveType
+Objeto --> "ShaderObjeto" Shader
+@enduml

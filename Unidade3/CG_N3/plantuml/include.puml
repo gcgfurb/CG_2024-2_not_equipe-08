@@ -1,0 +1,12 @@
+@startuml
+!include .\\Circulo.puml
+!include .\\Mundo.puml
+!include .\\Objeto.puml
+!include .\\Poligono.puml
+!include .\\Ponto.puml
+!include .\\Program.puml
+!include .\\Retangulo.puml
+!include .\\SegReta.puml
+!include .\\obj\Debug\net8.0\.NETCoreApp,Version=v8.0.AssemblyAttributes.puml
+!include .\\obj\Debug\net8.0\CG_N3.AssemblyInfo.puml
+@enduml

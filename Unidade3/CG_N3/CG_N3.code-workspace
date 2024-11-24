@@ -8,6 +8,6 @@
 		}
 	],
 	"settings": {
-		"dotnet.defaultSolution": "Projeto/Projeto.sln"
+		"dotnet.defaultSolution": "CG_N3/CG_N3.sln"
 	}
 }

@@ -21,7 +21,8 @@ namespace gcgcg
     private static Objeto mundo = null;
 
     private char rotuloAtual = '?';
-    private List<Poligono> polygonList = new List<Poligono>();
+    private Dictionary<char, Objeto> grafoLista = [];
+
     private Objeto objetoSelecionado = null;
     private Poligono unfinishedPolygon = null;
 
@@ -141,17 +142,14 @@ namespace gcgcg
       }
       if (estadoTeclado.IsKeyPressed(Keys.D))
       {
-            if (unfinishedPolygon != null)
+            Poligono polygon = (Poligono)(unfinishedPolygon ?? objetoSelecionado);
+            if (polygon != null)
             {
-                  unfinishedPolygon.PontosApagar();
-                  polygonList.Remove(unfinishedPolygon);
+                  grafoLista.Remove(polygon.Rotulo);
+                  polygon.ObjetoRemover();
                   unfinishedPolygon = null;
-            }
-            else if (objetoSelecionado != null)
-            {
-                  objetoSelecionado.PontosApagar();
-                  polygonList.Remove(((Poligono) objetoSelecionado));
                   objetoSelecionado = null;
+                  Grafocena.GrafocenaAtualizar(mundo, grafoLista);
             }
       }
       if (estadoTeclado.IsKeyDown(Keys.V))
@@ -261,6 +259,10 @@ namespace gcgcg
                   objetoSelecionado.MatrizRotacaoZBBox(-15);
             }
       }
+      if (unfinishedPolygon == null && estadoTeclado.IsKeyPressed(Keys.N))
+      {
+            objetoSelecionado = Grafocena.GrafoCenaProximo(mundo, objetoSelecionado, grafoLista);
+      }
       if (estadoTeclado.IsKeyDown(Keys.Escape))
         Close();
       #endregion
@@ -271,21 +273,21 @@ namespace gcgcg
             if (unfinishedPolygon == null)
             {
                   List<Ponto4D> polygonPoints = [getMousePos()];
-                  Poligono newPolygon = new Poligono(mundo, ref rotuloAtual, polygonPoints);
-                  polygonList.Add(newPolygon);
+                  Poligono newPolygon = new(objetoSelecionado ?? mundo, ref rotuloAtual, polygonPoints);
                   unfinishedPolygon = newPolygon;
+                  Grafocena.GrafocenaAtualizar(mundo, grafoLista);
             } else {
                   unfinishedPolygon.PontosAdicionar(getMousePos());
                   unfinishedPolygon.ObjetoAtualizar();
             }
       }
-      if (MouseState.IsButtonPressed(MouseButton.Left))
+      if (unfinishedPolygon == null && MouseState.IsButtonPressed(MouseButton.Left))
       {
             objetoSelecionado = null;
             Ponto4D mousePos = getMousePos();
-            foreach (Poligono polygon in polygonList)
+            foreach (KeyValuePair<char, Objeto> objeto in grafoLista)
             {
-                  polygon.ScanLine(mousePos, ref objetoSelecionado);
+                  objeto.Value.ScanLine(mousePos, ref objetoSelecionado);
             }
       }
       #endregion
