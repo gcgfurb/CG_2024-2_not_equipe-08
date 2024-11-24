@@ -1,0 +1,6 @@
+@startuml
+class Poligono {
+    + Poligono(_paiRef:Objeto, _rotulo:char, pontosPoligono:List<Ponto4D>)
+}
+Objeto <|-- Poligono
+@enduml

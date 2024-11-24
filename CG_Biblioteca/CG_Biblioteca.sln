@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CG_N2_2", "..\Unidade2\CG_N
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CG_N2_3", "..\Unidade2\CG_N2_3\CG_N2_3.csproj", "{377B2F70-69B2-433D-AEA9-669D9319BD43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projeto", "..\Unidade3\Projeto\Projeto.csproj", "{B5CB3B84-7508-4C6D-9CFC-C2A60CBBDE8E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CG_N3", "..\Unidade3\CG_N3\CG_N3.csproj", "{B5CB3B84-7508-4C6D-9CFC-C2A60CBBDE8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
