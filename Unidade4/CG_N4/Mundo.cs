@@ -13,6 +13,7 @@ using OpenTK.Windowing.Desktop;
 using System;
 using OpenTK.Mathematics;
 using System.Collections.Generic;
+using System.Drawing;
 
 //FIXME: padrão Singleton
 
@@ -46,11 +47,21 @@ namespace gcgcg
     private Shader _shaderTresMosqueteiros;
     private Texture _textureMosqueteiros;
     private int _vertexBufferObject_light;
+    private int _elementBufferObject;
+    private int _vertexBufferObject;
+    private int _vertexArrayObject;
     private readonly Vector3 _lightPos = new Vector3(1.2f, 1.0f, 2.0f);
     private int _vaoModel;
     private int _vaoLamp;
     private Shader _lampShader;
     private Shader _lightingShader;
+    private Shader _basicLightingShader;
+    private Shader _lightingMapShader;
+    private Shader _lightCasterDirLightsShader;
+    private Shader _lightCasterPointLightShader;
+    private Shader _lightCasterSpotlightShader;
+    private Shader _multipleLightsShader;
+    private int _lightShaderToUse = 2;
 
     private readonly float[] _vertices =
         {
@@ -97,7 +108,74 @@ namespace gcgcg
             -1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
             -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
         };
+
+    private readonly float[] _vertices2 =
+        {
+            // Positions              Texture coords
+             1.0f, -1.0f, -1.0f, 0.0f, 0.0f, // FACE DE TRAS
+            -1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
+            -1.0f,  1.0f, -1.0f, 1.0f, 1.0f,
+            -1.0f,  1.0f, -1.0f, 1.0f, 1.0f,
+             1.0f,  1.0f, -1.0f, 0.0f, 1.0f,
+             1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
+
+            -1.0f, -1.0f,  1.0f, 0.0f, 0.0f, // FACE FRONTAL
+             1.0f, -1.0f,  1.0f, 1.0f, 0.0f,
+             1.0f,  1.0f,  1.0f, 1.0f, 1.0f,
+             1.0f,  1.0f,  1.0f, 1.0f, 1.0f,
+            -1.0f,  1.0f,  1.0f, 0.0f, 1.0f,
+            -1.0f, -1.0f,  1.0f, 0.0f, 0.0f,
+
+            -1.0f,  1.0f, -1.0f, 0.0f, 1.0f, // FACE ESQUERDA DO CUBO
+            -1.0f,  1.0f,  1.0f, 1.0f, 1.0f,
+            -1.0f, -1.0f,  1.0f, 1.0f, 0.0f,
+            -1.0f, -1.0f,  1.0f, 1.0f, 0.0f,
+            -1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
+            -1.0f,  1.0f, -1.0f, 0.0f, 1.0f,
+
+             1.0f,  1.0f,  1.0f, 0.0f, 1.0f, // FACE DIREITA DO CUBO
+             1.0f,  1.0f, -1.0f, 1.0f, 1.0f,
+             1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
+             1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
+             1.0f, -1.0f,  1.0f, 0.0f, 0.0f,
+             1.0f,  1.0f,  1.0f, 0.0f, 1.0f,
+
+            -1.0f, -1.0f,  1.0f, 0.0f, 1.0f, // FACE DE BAIXO DO CUBO
+             1.0f, -1.0f,  1.0f, 1.0f, 1.0f,
+             1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
+             1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
+            -1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
+            -1.0f, -1.0f,  1.0f, 0.0f, 1.0f,
+
+            -1.0f,  1.0f, -1.0f, 0.0f, 1.0f, // FACE DE CIMA DO CUBO
+             1.0f,  1.0f, -1.0f, 1.0f, 1.0f,
+             1.0f,  1.0f,  1.0f, 1.0f, 0.0f,
+             1.0f,  1.0f,  1.0f, 1.0f, 0.0f,
+            -1.0f,  1.0f,  1.0f, 0.0f, 0.0f,
+            -1.0f,  1.0f, -1.0f, 0.0f, 1.0f
+        };
+    private readonly Vector3[] _pointLightPositions =
+        {
+            new Vector3(0.7f, 0.2f, 2.0f),
+            new Vector3(2.3f, -3.3f, -4.0f),
+            new Vector3(-4.0f, 2.0f, -12.0f),
+            new Vector3(0.0f, 0.0f, -3.0f)
+        };
+    private readonly float[] _verticesTexture =
+        {
+             1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+             1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+            -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+            -1.0f,  1.0f, 0.0f, 0.0f, 1.0f 
+        };
+    private readonly uint[] _indices =
+        {
+            0, 1, 3,
+            1, 2, 3
+        };
     private Camera _camera;
+    private Vector2 _lastPos;
+    private float _sensitivity = 0.2f;
 
     public Mundo(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
            : base(gameWindowSettings, nativeWindowSettings)
@@ -147,13 +225,20 @@ namespace gcgcg
       cuboMenor.TrocaEixoRotacao('y');
 
       objetoSelecionado = cuboMenor;
-
-      _lightingShader = new Shader("Shaders/shaderLighting.vert", "Shaders/lighting.frag");
-      _lampShader = new Shader("Shaders/shaderLighting.vert", "Shaders/shaderLighting.frag");
-
-      OnLoadTextureLight();
-
       #endregion
+
+      _lightingMapShader = new Shader("Shaders/shaderLighting.vert", "Shaders/lighting.frag");
+      _basicLightingShader = new Shader("Shaders/shaderLighting.vert", "Shaders/basic_lighting.frag");
+      _lightCasterDirLightsShader = new Shader("Shaders/shaderLighting.vert", "Shaders/directional_lighting.frag");
+      _lightCasterPointLightShader = new Shader("Shaders/shaderLighting.vert", "Shaders/point_lighting.frag");
+      _lightCasterSpotlightShader = new Shader("Shaders/shaderLighting.vert", "Shaders/spotlight_lighting.frag");
+      _multipleLightsShader = new Shader("Shaders/shaderLighting.vert", "Shaders/multiple_lighting.frag");
+      
+      _lampShader = new Shader("Shaders/shaderLighting.vert", "Shaders/shaderLighting.frag");
+      _lightingShader = _lightingMapShader;
+      
+      OnLoadTextureLight();
+      OnLoadTexture();
 
       _camera = new Camera(Vector3.UnitZ * 5, ClientSize.X / (float)ClientSize.Y);
     }
@@ -177,6 +262,236 @@ namespace gcgcg
     {
       GL.BindVertexArray(_vaoModel);
 
+      if (_lightShaderToUse == 0)
+      {
+        onRenderTextureShader();
+      }
+      if (_lightShaderToUse == 1)
+      {
+        _lightingShader = _basicLightingShader;
+        onRenderBasicLightingShader();
+      }
+      if (_lightShaderToUse == 2)
+      {
+        _lightingShader = _lightingMapShader;
+        onRenderLightingMapShader();
+      }
+      if (_lightShaderToUse == 3)
+      {
+        _lightingShader = _lightCasterDirLightsShader;
+        onRenderDirectionalLightingShader();
+      }
+      if (_lightShaderToUse == 4)
+      {
+        _lightingShader = _lightCasterPointLightShader;
+        onRenderPointLightingShader();
+      }
+      if (_lightShaderToUse == 5)
+      {
+        _lightingShader = _lightCasterSpotlightShader;
+        onRenderSpotlightLightingShader();
+      }
+      if (_lightShaderToUse == 6)
+      {
+        _lightingShader = _multipleLightsShader;
+        onRenderMultipleLightingShader();
+      }
+      
+    }
+
+    protected void onRenderMultipleLightingShader()
+    {
+      GL.BindVertexArray(_vaoModel);
+
+      _textureMosqueteiros.Use(TextureUnit.Texture0);;
+      _lightingShader.Use();
+
+      _lightingShader.SetMatrix4("model", Matrix4.Identity);
+      _lightingShader.SetMatrix4("view", _camera.GetViewMatrix());
+      _lightingShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+
+      _lightingShader.SetVector3("viewPos", _camera.Position);
+
+      _lightingShader.SetInt("material.diffuse", 0);
+      _lightingShader.SetInt("material.specular", 1);
+      _lightingShader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
+      _lightingShader.SetFloat("material.shininess", 32.0f);
+
+      _lightingShader.SetVector3("dirLight.direction", new Vector3(-0.2f, -1.0f, -0.3f));
+      _lightingShader.SetVector3("dirLight.ambient", new Vector3(0.05f, 0.05f, 0.05f));
+      _lightingShader.SetVector3("dirLight.diffuse", new Vector3(0.4f, 0.4f, 0.4f));
+      _lightingShader.SetVector3("dirLight.specular", new Vector3(0.5f, 0.5f, 0.5f));
+
+      for (int i = 0; i < _pointLightPositions.Length; i++)
+      {
+          _lightingShader.SetVector3($"pointLights[{i}].position", _pointLightPositions[i]);
+          _lightingShader.SetVector3($"pointLights[{i}].ambient", new Vector3(0.05f, 0.05f, 0.05f));
+          _lightingShader.SetVector3($"pointLights[{i}].diffuse", new Vector3(0.8f, 0.8f, 0.8f));
+          _lightingShader.SetVector3($"pointLights[{i}].specular", new Vector3(1.0f, 1.0f, 1.0f));
+          _lightingShader.SetFloat($"pointLights[{i}].constant", 1.0f);
+          _lightingShader.SetFloat($"pointLights[{i}].linear", 0.09f);
+          _lightingShader.SetFloat($"pointLights[{i}].quadratic", 0.032f);
+      }
+
+      _lightingShader.SetVector3("spotLight.position", _camera.Position);
+      _lightingShader.SetVector3("spotLight.direction", _camera.Front);
+      _lightingShader.SetVector3("spotLight.ambient", new Vector3(0.0f, 0.0f, 0.0f));
+      _lightingShader.SetVector3("spotLight.diffuse", new Vector3(1.0f, 1.0f, 1.0f));
+      _lightingShader.SetVector3("spotLight.specular", new Vector3(1.0f, 1.0f, 1.0f));
+      _lightingShader.SetFloat("spotLight.constant", 1.0f);
+      _lightingShader.SetFloat("spotLight.linear", 0.09f);
+      _lightingShader.SetFloat("spotLight.quadratic", 0.032f);
+      _lightingShader.SetFloat("spotLight.cutOff", MathF.Cos(MathHelper.DegreesToRadians(12.5f)));
+      _lightingShader.SetFloat("spotLight.outerCutOff", MathF.Cos(MathHelper.DegreesToRadians(17.5f)));
+
+      GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
+
+      GL.BindVertexArray(_vaoLamp);
+
+      _lampShader.Use();
+
+      _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
+      _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+
+      for (int i = 0; i < _pointLightPositions.Length; i++)
+      {
+          Matrix4 lampMatrix = Matrix4.CreateScale(0.2f);
+          lampMatrix = lampMatrix * Matrix4.CreateTranslation(_pointLightPositions[i]);
+
+          _lampShader.SetMatrix4("model", lampMatrix);
+
+          GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
+      }
+    }
+
+    protected void onRenderSpotlightLightingShader()
+    {
+      GL.BindVertexArray(_vaoModel);
+
+      _textureMosqueteiros.Use(TextureUnit.Texture0);
+      _lightingShader.Use();
+
+      _lightingShader.SetMatrix4("model", Matrix4.Identity);
+      _lightingShader.SetMatrix4("view", _camera.GetViewMatrix());
+      _lightingShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+
+      _lightingShader.SetVector3("viewPos", _camera.Position);
+
+      _lightingShader.SetInt("material.diffuse", 0);
+      _lightingShader.SetInt("material.specular", 1);
+      _lightingShader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
+      _lightingShader.SetFloat("material.shininess", 32.0f);
+
+      _lightingShader.SetVector3("light.position", _camera.Position);
+      _lightingShader.SetVector3("light.direction", _camera.Front);
+      _lightingShader.SetFloat("light.cutOff", MathF.Cos(MathHelper.DegreesToRadians(12.5f)));
+      _lightingShader.SetFloat("light.outerCutOff", MathF.Cos(MathHelper.DegreesToRadians(17.5f)));
+      _lightingShader.SetFloat("light.constant", 1.0f);
+      _lightingShader.SetFloat("light.linear", 0.09f);
+      _lightingShader.SetFloat("light.quadratic", 0.032f);
+      _lightingShader.SetVector3("light.ambient", new Vector3(0.2f));
+      _lightingShader.SetVector3("light.diffuse", new Vector3(0.5f));
+      _lightingShader.SetVector3("light.specular", new Vector3(1.0f));
+
+      GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
+
+      GL.BindVertexArray(_vaoLamp);
+
+      _lampShader.Use();
+
+      Matrix4 lampMatrix = Matrix4.CreateScale(0.1f);
+      lampMatrix = lampMatrix * Matrix4.CreateTranslation(_lightPos);
+
+      _lampShader.SetMatrix4("model", lampMatrix);
+      _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
+      _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+
+      GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
+    }
+
+    protected void onRenderPointLightingShader()
+    {
+      GL.BindVertexArray(_vaoModel);
+
+      _textureMosqueteiros.Use(TextureUnit.Texture0);
+      _lightingShader.Use();
+
+      _lightingShader.SetMatrix4("model", Matrix4.Identity);
+      _lightingShader.SetMatrix4("view", _camera.GetViewMatrix());
+      _lightingShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+
+      _lightingShader.SetVector3("viewPos", _camera.Position);
+
+      _lightingShader.SetInt("material.diffuse", 0);
+      _lightingShader.SetInt("material.specular", 1);
+      _lightingShader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
+      _lightingShader.SetFloat("material.shininess", 32.0f);
+            
+      _lightingShader.SetVector3("light.position", _lightPos);
+      _lightingShader.SetFloat("light.constant", 1.0f);
+      _lightingShader.SetFloat("light.linear", 0.09f);
+      _lightingShader.SetFloat("light.quadratic", 0.032f);
+      _lightingShader.SetVector3("light.ambient", new Vector3(0.2f));
+      _lightingShader.SetVector3("light.diffuse", new Vector3(0.5f));
+      _lightingShader.SetVector3("light.specular", new Vector3(1.0f));
+
+      GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
+
+      GL.BindVertexArray(_vaoLamp);
+
+      _lampShader.Use();
+
+      Matrix4 lampMatrix = Matrix4.CreateScale(0.1f);
+      lampMatrix = lampMatrix * Matrix4.CreateTranslation(_lightPos);
+
+      _lampShader.SetMatrix4("model", lampMatrix);
+      _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
+      _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+
+      GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
+    }
+
+    protected void onRenderDirectionalLightingShader()
+    {
+      GL.BindVertexArray(_vaoModel);
+
+      _textureMosqueteiros.Use(TextureUnit.Texture0);
+      _lightingShader.Use();
+
+      _lightingShader.SetMatrix4("model", Matrix4.Identity);
+      _lightingShader.SetMatrix4("view", _camera.GetViewMatrix());
+      _lightingShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+
+      _lightingShader.SetVector3("viewPos", _camera.Position);
+
+      _lightingShader.SetInt("material.diffuse", 0);
+      _lightingShader.SetInt("material.specular", 1);
+      _lightingShader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
+      _lightingShader.SetFloat("material.shininess", 32.0f);
+
+      _lightingShader.SetVector3("light.direction", new Vector3(-_lightPos.X, -_lightPos.Y, -_lightPos.Z));
+      _lightingShader.SetVector3("light.ambient", new Vector3(0.2f));
+      _lightingShader.SetVector3("light.diffuse", new Vector3(0.5f));
+      _lightingShader.SetVector3("light.specular", new Vector3(1.0f));
+
+      GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
+
+      GL.BindVertexArray(_vaoLamp);
+
+      _lampShader.Use();
+
+      Matrix4 lampMatrix = Matrix4.CreateScale(0.1f);
+      lampMatrix = lampMatrix * Matrix4.CreateTranslation(_lightPos);
+
+      _lampShader.SetMatrix4("model", lampMatrix);
+      _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
+      _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+
+      GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
+    }
+
+    protected void onRenderLightingMapShader()
+    {
       _textureMosqueteiros.Use(TextureUnit.Texture0);
       _lightingShader.Use();
 
@@ -211,6 +526,51 @@ namespace gcgcg
       _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
 
       GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
+    }
+
+    protected void onRenderBasicLightingShader()
+    {
+      GL.BindVertexArray(_vaoModel);
+
+      _lightingShader.Use();
+
+      _lightingShader.SetMatrix4("model", Matrix4.Identity);
+      _lightingShader.SetMatrix4("view", _camera.GetViewMatrix());
+      _lightingShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+
+      _lightingShader.SetVector3("objectColor", new Vector3(1.0f, 0.5f, 0.31f));
+      _lightingShader.SetVector3("lightColor", new Vector3(1.0f, 1.0f, 1.0f));
+      _lightingShader.SetVector3("lightPos", _lightPos);
+      _lightingShader.SetVector3("viewPos", _camera.Position);
+
+      GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
+
+      GL.BindVertexArray(_vaoLamp);
+
+      _lampShader.Use();
+
+      Matrix4 lampMatrix = Matrix4.CreateScale(0.1f);
+      lampMatrix = lampMatrix * Matrix4.CreateTranslation(_lightPos);
+
+      _lampShader.SetMatrix4("model", lampMatrix);
+      _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
+      _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+
+      GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
+    }
+
+    protected void onRenderTextureShader()
+    {
+      GL.BindVertexArray(_vertexArrayObject);
+
+      _textureMosqueteiros.Use(TextureUnit.Texture0);
+      _shaderTresMosqueteiros.Use();
+      _shaderTresMosqueteiros.SetMatrix4("model", Matrix4.Identity);
+      _shaderTresMosqueteiros.SetMatrix4("view", _camera.GetViewMatrix());
+      _shaderTresMosqueteiros.SetMatrix4("projection", _camera.GetProjectionMatrix());
+
+
+      GL.DrawElements(PrimitiveType.Triangles, _vertices2.Length, DrawElementsType.UnsignedInt, 0);
     }
 
     protected override void OnUpdateFrame(FrameEventArgs e)
@@ -260,10 +620,20 @@ namespace gcgcg
         objetoSelecionado.MatrizEscalaXYZBBox(0.5, 0.5, 0.5);
       if (estadoTeclado.IsKeyPressed(Keys.End) && objetoSelecionado != null)
         objetoSelecionado.MatrizEscalaXYZBBox(2, 2, 2);
-      if (estadoTeclado.IsKeyPressed(Keys.D1) && objetoSelecionado != null)
-        objetoSelecionado.MatrizRotacao(10);
-      if (estadoTeclado.IsKeyPressed(Keys.D2) && objetoSelecionado != null)
-        objetoSelecionado.MatrizRotacao(-10);
+      if (estadoTeclado.IsKeyPressed(Keys.D0))
+        _lightShaderToUse = 0;
+      if (estadoTeclado.IsKeyPressed(Keys.D1))
+        _lightShaderToUse = 1;
+      if (estadoTeclado.IsKeyPressed(Keys.D2))
+        _lightShaderToUse = 2;
+      if (estadoTeclado.IsKeyPressed(Keys.D3))
+        _lightShaderToUse = 3;
+      if (estadoTeclado.IsKeyPressed(Keys.D4))
+        _lightShaderToUse = 4;
+      if (estadoTeclado.IsKeyPressed(Keys.D5))
+        _lightShaderToUse = 5;
+      if (estadoTeclado.IsKeyPressed(Keys.D6))
+        _lightShaderToUse = 6;
       if (estadoTeclado.IsKeyPressed(Keys.D3) && objetoSelecionado != null)
         objetoSelecionado.MatrizRotacaoZBBox(10);
       if (estadoTeclado.IsKeyPressed(Keys.D4) && objetoSelecionado != null)
@@ -300,19 +670,25 @@ namespace gcgcg
         Console.WriteLine("Vector2 mousePosition: " + MousePosition);
         Console.WriteLine("Vector2i windowSize: " + ClientSize);
       }
-      if (MouseState.IsButtonDown(MouseButton.Right) && objetoSelecionado != null)
+      var mouse = MouseState;
+      if (MouseState.IsButtonPressed(MouseButton.Right))
       {
-        Console.WriteLine("MouseState.IsButtonDown(MouseButton.Right)");
+        _lastPos = new Vector2(mouse.X, mouse.Y);
+        CursorState = CursorState.Grabbed;
+      }
+      if (MouseState.IsButtonDown(MouseButton.Right))
+      {
+        float deltaX = mouse.X - _lastPos.X;
+        float deltaY = mouse.Y - _lastPos.Y;
+        
+        _lastPos = new Vector2(mouse.X, mouse.Y);
 
-        int janelaLargura = ClientSize.X;
-        int janelaAltura = ClientSize.Y;
-        Ponto4D mousePonto = new Ponto4D(MousePosition.X, MousePosition.Y);
-        Ponto4D sruPonto = Utilitario.NDC_TelaSRU(janelaLargura, janelaAltura, mousePonto);
-
-        objetoSelecionado.PontosAlterar(sruPonto, 0);
+        _camera.Yaw += deltaX * _sensitivity;
+        _camera.Pitch -= deltaY * _sensitivity;
       }
       if (MouseState.IsButtonReleased(MouseButton.Right))
       {
+        CursorState = CursorState.Normal;
         Console.WriteLine("MouseState.IsButtonReleased(MouseButton.Right)");
       }
 
@@ -354,6 +730,32 @@ namespace gcgcg
 
 
       base.OnUnload();
+    }
+
+    protected void OnLoadTexture()
+    {
+      _vertexArrayObject = GL.GenVertexArray();
+      GL.BindVertexArray(_vertexArrayObject);
+
+      _vertexBufferObject = GL.GenBuffer();
+      GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
+      GL.BufferData(BufferTarget.ArrayBuffer, _vertices2.Length * sizeof(float), _vertices2, BufferUsageHint.StaticDraw);
+
+      _elementBufferObject = GL.GenBuffer();
+      GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
+      GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
+
+      _shaderTresMosqueteiros.Use();
+
+      var vertexLocation = _shaderTresMosqueteiros.GetAttribLocation("aPosition");
+      GL.EnableVertexAttribArray(vertexLocation);
+      GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
+
+      var texCoordLocation = _shaderTresMosqueteiros.GetAttribLocation("aTexCoord");
+      GL.EnableVertexAttribArray(texCoordLocation);
+      GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
+
+      _textureMosqueteiros.Use(TextureUnit.Texture0);
     }
 
     protected void OnLoadTextureLight()
