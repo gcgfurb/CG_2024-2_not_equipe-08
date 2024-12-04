@@ -44,57 +44,7 @@ namespace gcgcg
     private Shader _shaderMagenta;
     private Shader _shaderAmarela;
     private Shader _shaderTresMosqueteiros;
-   // private Shader _shaderFrontFaceTexture;
-   // private Shader _shaderBackFaceTexture;
-   // private Shader _shaderTopFaceTexture;
-   // private Shader _shaderBottomFaceTexture;
-   // private Shader _shaderRightFaceTexture;
-   // private Shader _shaderLeftFaceTexture;
     private Texture _textureMosqueteiros;
-    private List<float[]> _faceVertices;
-    private List<uint[]> _faceIndices;
-    private readonly List<Ponto4D> _rectangleFirstPoints = new List<Ponto4D> {
-      new Ponto4D(-1.0, -1.0, 1.0),
-      new Ponto4D(-1.0, -1.0, -1.0),
-      new Ponto4D(-1.0, 1.0, -1.0),
-      new Ponto4D(-1.0, -1.0, -1.0),
-      new Ponto4D(1.0, -1.0, -1.0),
-      new Ponto4D(-1.0, -1.0, -1.0)
-    };
-    private readonly List<Ponto4D> _rectangleSecondPoints = new List<Ponto4D> {
-      new Ponto4D(1.0, 1.0, 1.0),
-      new Ponto4D(1.0, 1.0, -1.0),
-      new Ponto4D(1.0, 1.0, 1.0),
-      new Ponto4D(1.0, -1.0, 1.0),
-      new Ponto4D(1.0, 1.0, 1.0),
-      new Ponto4D(-1.0, 1.0, 1.0)
-    };
-    //private List<Shader> _shadersWithTextures;
-    private List<int> _vertexBufferObjects_texture;
-    private List<int> _vertexArrayObjects_texture;
-    private List<int> _elementBufferObjects_texture;
-
-    private readonly int _vertexBufferObject_texture_frontFace = 0;
-    private readonly int _vertexBufferObject_texture_backFace = 0;
-    private readonly int _vertexBufferObject_texture_topFace = 0;
-    private readonly int _vertexBufferObject_texture_bottomFace = 0;
-    private readonly int _vertexBufferObject_texture_rightFace = 0;
-    private readonly int _vertexBufferObject_texture_leftFace = 0;
-
-    private readonly int _vertexArrayObject_texture_frontFace = 0;
-    private readonly int _vertexArrayObject_texture_backFace = 0;
-    private readonly int _vertexArrayObject_texture_topFace = 0;
-    private readonly int _vertexArrayObject_texture_bottomFace = 0;
-    private readonly int _vertexArrayObject_texture_rightFace = 0;
-    private readonly int _vertexArrayObject_texture_leftFace = 0;
-
-    private readonly int _elementBufferObject_texture_frontFace = 0;
-    private readonly int _elementBufferObject_texture_backFace = 0;
-    private readonly int _elementBufferObject_texture_topFace = 0;
-    private readonly int _elementBufferObject_texture_bottomFace = 0;
-    private readonly int _elementBufferObject_texture_rightFace = 0;
-    private readonly int _elementBufferObject_texture_leftFace = 0;
-
     private int _vertexBufferObject_light;
     private readonly Vector3 _lightPos = new Vector3(1.2f, 1.0f, 2.0f);
     private int _vaoModel;
@@ -105,61 +55,47 @@ namespace gcgcg
     private readonly float[] _vertices =
         {
             // Positions          Normals              Texture coords
-            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
-             0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
-             0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
-             0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
-            -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+             1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f, // FACE DE TRAS
+            -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
+            -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+            -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+             1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
+             1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
 
-            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
-             0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f, 0.0f,
-             0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f, 1.0f,
-             0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f, 1.0f,
-            -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f, 1.0f,
-            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
+            -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f, 0.0f, // FACE FRONTAL
+             1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f, 0.0f,
+             1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f, 1.0f,
+             1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f, 1.0f,
+            -1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f, 1.0f,
+            -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
 
-            //-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-            //-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-            //-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-            //-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-            //-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-            //-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+            -1.0f,  1.0f, -1.0f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f, // FACE ESQUERDA DO CUBO
+            -1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+            -1.0f, -1.0f,  1.0f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+            -1.0f, -1.0f,  1.0f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+            -1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+            -1.0f,  1.0f, -1.0f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
 
-            -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-            -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-            -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-            -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-            -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-            -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+             1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f, // FACE DIREITA DO CUBO
+             1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+             1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+             1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+             1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+             1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
 
-             //0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-             //0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-             //0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-             //0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-             //0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-             //0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+            -1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f, // FACE DE BAIXO DO CUBO
+             1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
+             1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+             1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+            -1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
+            -1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
 
-             0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-             0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-             0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-             0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-             0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-             0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-
-            -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
-             0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
-             0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
-             0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
-            -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
-
-            -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
-             0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
-             0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
-             0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
-            -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
-            -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
+            -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f, // FACE DE CIMA DO CUBO
+             1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
+             1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+             1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+            -1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
+            -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
         };
     private Camera _camera;
 
@@ -192,12 +128,6 @@ namespace gcgcg
       _shaderMagenta = new Shader("Shaders/shader.vert", "Shaders/shaderMagenta.frag");
       _shaderAmarela = new Shader("Shaders/shader.vert", "Shaders/shaderAmarela.frag");
       _shaderTresMosqueteiros = new Shader("Shaders/shaderTexture.vert", "Shaders/shaderTexture.frag");
-      //_shaderFrontFaceTexture = new Shader("Shaders/shaderTexture.vert", "Shaders/shaderTexture.frag");
-      //_shaderBackFaceTexture = new Shader("Shaders/shaderTexture.vert", "Shaders/shaderTexture.frag");
-      //_shaderTopFaceTexture = new Shader("Shaders/shaderTexture.vert", "Shaders/shaderTexture.frag");
-      //_shaderBottomFaceTexture = new Shader("Shaders/shaderTexture.vert", "Shaders/shaderTexture.frag");
-      //_shaderRightFaceTexture = new Shader("Shaders/shaderTexture.vert", "Shaders/shaderTexture.frag");
-      //_shaderLeftFaceTexture = new Shader("Shaders/shaderTexture.vert", "Shaders/shaderTexture.frag");
       #endregion
 
       #region Eixos: SRU  
@@ -217,57 +147,13 @@ namespace gcgcg
       cuboMenor.TrocaEixoRotacao('y');
 
       objetoSelecionado = cuboMenor;
-      //objetoSelecionado = new Cubo(mundo, ref rotuloNovo);
-      //objetoSelecionado.shaderCor = _shaderAmarela;
-      //_textureMosqueteiros = Texture.LoadFromFile("Textures/tres_mosqueteiros.png");
-      //_faceVertices = ((Cubo) objetoSelecionado).GetFaceVertices();
-      //_faceIndices = ((Cubo) objetoSelecionado).GetFaceIndices();
-
-      _vertexArrayObjects_texture = [
-        _vertexArrayObject_texture_frontFace,
-        _vertexArrayObject_texture_backFace,
-        _vertexArrayObject_texture_topFace,
-        _vertexArrayObject_texture_bottomFace,
-        _vertexArrayObject_texture_rightFace,
-        _vertexArrayObject_texture_leftFace
-      ];
-
-      _vertexBufferObjects_texture = [
-        _vertexBufferObject_texture_frontFace,
-        _vertexBufferObject_texture_backFace,
-        _vertexBufferObject_texture_topFace,
-        _vertexBufferObject_texture_bottomFace,
-        _vertexBufferObject_texture_rightFace,
-        _vertexBufferObject_texture_leftFace
-      ];
-
-      _elementBufferObjects_texture = [
-        _elementBufferObject_texture_frontFace,
-        _elementBufferObject_texture_backFace,
-        _elementBufferObject_texture_topFace,
-        _elementBufferObject_texture_bottomFace,
-        _elementBufferObject_texture_rightFace,
-        _elementBufferObject_texture_leftFace
-      ];
-
-      //_shadersWithTextures = [
-      //  _shaderFrontFaceTexture,
-      //  _shaderBackFaceTexture,
-      //  _shaderTopFaceTexture,
-      //  _shaderBottomFaceTexture,
-      //  _shaderRightFaceTexture,
-      //  _shaderLeftFaceTexture
-      //];
 
       _lightingShader = new Shader("Shaders/shaderLighting.vert", "Shaders/lighting.frag");
       _lampShader = new Shader("Shaders/shaderLighting.vert", "Shaders/shaderLighting.frag");
 
       OnLoadTextureLight();
-      //OnLoadUseTextures();
-      //OnLoadUseLight();
 
       #endregion
-      // objetoSelecionado.MatrizEscalaXYZ(0.2, 0.2, 0.2);
 
       _camera = new Camera(Vector3.UnitZ * 5, ClientSize.X / (float)ClientSize.Y);
     }
@@ -280,8 +166,6 @@ namespace gcgcg
 
       mundo.Desenhar(new Transformacao4D(), _camera);
       OnRenderTextureLight();
-      //OnRenderFrameUseTextures();
-      //OnRenderFrameUseLight();
 
 #if CG_Gizmo      
       Gizmo_Sru3D();
@@ -319,7 +203,7 @@ namespace gcgcg
       _lampShader.Use();
 
       Matrix4 lampMatrix = Matrix4.Identity;
-      lampMatrix *= Matrix4.CreateScale(0.2f);
+      lampMatrix *= Matrix4.CreateScale(0.1f);
       lampMatrix *= Matrix4.CreateTranslation(_lightPos);
 
       _lampShader.SetMatrix4("model", lampMatrix);
@@ -327,49 +211,6 @@ namespace gcgcg
       _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
 
       GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
-    }
-
-    protected void OnRenderFrameUseLight()
-    {
-      GL.BindVertexArray(_vaoModel);
-
-      _lightingShader.Use();
-
-      _lightingShader.SetMatrix4("model", Matrix4.Identity);
-      _lightingShader.SetMatrix4("view", _camera.GetViewMatrix());
-      _lightingShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
-
-      _lightingShader.SetVector3("objectColor", new Vector3(1.0f, 1.0f, 1.0f));
-      _lightingShader.SetVector3("lightColor", new Vector3(1.0f, 1.0f, 1.0f));
-      _lightingShader.SetVector3("lightPos", _lightPos);
-      _lightingShader.SetVector3("viewPos", _camera.Position);
-
-      GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
-
-      GL.BindVertexArray(_vaoLamp);
-
-      _lampShader.Use();
-
-      Matrix4 lampMatrix = Matrix4.CreateScale(0.2f);
-      lampMatrix = lampMatrix * Matrix4.CreateTranslation(_lightPos);
-
-      _lampShader.SetMatrix4("model", lampMatrix);
-      _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
-      _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
-
-      GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
-    }
-
-    protected void OnRenderFrameUseTextures()
-    {
-      for (int i = 0; i < _vertexArrayObjects_texture.Count; i++)
-      {
-        GL.BindVertexArray(_vertexArrayObjects_texture[i]);
-        _textureMosqueteiros.Use(TextureUnit.Texture0);
-        _shaderTresMosqueteiros.Use();
-
-        GL.DrawElements(PrimitiveType.Triangles, _faceIndices[i].Length, DrawElementsType.UnsignedInt, 0);
-      }
     }
 
     protected override void OnUpdateFrame(FrameEventArgs e)
@@ -500,10 +341,6 @@ namespace gcgcg
       GL.DeleteBuffer(_vertexBufferObject_sruEixos);
       GL.DeleteVertexArray(_vertexArrayObject_sruEixos);
 
-      OnUnloadDeleteArrays();
-      OnUnloadDeleteBuffers();
-      OnUnloadDeleteElementBuffers();
-
       GL.DeleteProgram(_shaderBranca.Handle);
       GL.DeleteProgram(_shaderVermelha.Handle);
       GL.DeleteProgram(_shaderVerde.Handle);
@@ -512,41 +349,11 @@ namespace gcgcg
       GL.DeleteProgram(_shaderMagenta.Handle);
       GL.DeleteProgram(_shaderAmarela.Handle);
       GL.DeleteProgram(_shaderTresMosqueteiros.Handle);
-      //GL.DeleteProgram(_shaderFrontFaceTexture.Handle);
-      //GL.DeleteProgram(_shaderBackFaceTexture.Handle);
-      //GL.DeleteProgram(_shaderTopFaceTexture.Handle);
-      //GL.DeleteProgram(_shaderBottomFaceTexture.Handle);
-      //GL.DeleteProgram(_shaderRightFaceTexture.Handle);
-      //GL.DeleteProgram(_shaderLeftFaceTexture.Handle);
       GL.DeleteProgram(_lightingShader.Handle);
       GL.DeleteProgram(_lampShader.Handle);
 
 
       base.OnUnload();
-    }
-
-    protected void OnUnloadDeleteArrays()
-    {
-      foreach (int _vertexArrayObject_texture in _vertexArrayObjects_texture)
-      {
-        GL.DeleteVertexArray(_vertexArrayObject_texture);
-      }
-    }
-
-    protected void OnUnloadDeleteBuffers()
-    {
-      foreach (int _vertexBufferObject_texture in _vertexBufferObjects_texture)
-      {
-        GL.DeleteBuffer(_vertexBufferObject_texture);
-      }
-    }
-
-    protected void OnUnloadDeleteElementBuffers()
-    {
-      foreach (int _elementBufferObject_texture in _elementBufferObjects_texture)
-      {
-        GL.DeleteBuffer(_elementBufferObject_texture);
-      }
     }
 
     protected void OnLoadTextureLight()
@@ -559,7 +366,6 @@ namespace gcgcg
         _vaoModel = GL.GenVertexArray();
         GL.BindVertexArray(_vaoModel);
 
-        // All of the vertex attributes have been updated to now have a stride of 8 float sizes.
         var positionLocation = _lightingShader.GetAttribLocation("aPos");
         GL.EnableVertexAttribArray(positionLocation);
         GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
@@ -568,8 +374,6 @@ namespace gcgcg
         GL.EnableVertexAttribArray(normalLocation);
         GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
 
-        // The texture coords have now been added too, remember we only have 2 coordinates as the texture is 2d,
-        // so the size parameter should only be 2 for the texture coordinates.
         var texCoordLocation = _lightingShader.GetAttribLocation("aTexCoords");
         GL.EnableVertexAttribArray(texCoordLocation);
         GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
@@ -579,82 +383,12 @@ namespace gcgcg
           _vaoLamp = GL.GenVertexArray();
           GL.BindVertexArray(_vaoLamp);
 
-          // The lamp shader should have its stride updated aswell, however we dont actually
-          // use the texture coords for the lamp, so we dont need to add any extra attributes.
           var positionLocation = _lampShader.GetAttribLocation("aPos");
           GL.EnableVertexAttribArray(positionLocation);
           GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
       }
 
       _textureMosqueteiros = Texture.LoadFromFile("Textures/tres_mosqueteiros.png");
-    }
-
-    protected void OnLoadUseTextures()
-    {
-      for (int i = 0; i < _vertexArrayObjects_texture.Count; i++)
-      {
-        GL.Enable(EnableCap.Texture2D);
-        _vertexArrayObjects_texture[i] = GL.GenVertexArray();
-        GL.BindVertexArray(_vertexArrayObjects_texture[i]);
-
-        _vertexBufferObjects_texture[i] = GL.GenBuffer();
-        GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObjects_texture[i]);
-        GL.BufferData(BufferTarget.ArrayBuffer, _faceVertices[i].Length * sizeof(float), _faceVertices[i], BufferUsageHint.StaticDraw);
-
-        _elementBufferObjects_texture[i] = GL.GenBuffer();
-        GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObjects_texture[i]);
-        GL.BufferData(BufferTarget.ElementArrayBuffer, _faceIndices[i].Length * sizeof(uint), _faceIndices[i], BufferUsageHint.StaticDraw);
-
-        _shaderTresMosqueteiros.Use();
-
-        var vertexLocation = _shaderTresMosqueteiros.GetAttribLocation("aPosition");
-        GL.EnableVertexAttribArray(vertexLocation);
-        GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
-
-        var texCoordLocation = _shaderTresMosqueteiros.GetAttribLocation("aTexCoord");
-        GL.EnableVertexAttribArray(texCoordLocation);
-        GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
-
-        _textureMosqueteiros.Use(TextureUnit.Texture0);
-
-        Retangulo faceRectangle = new Retangulo(objetoSelecionado, ref rotuloNovo, _rectangleFirstPoints[i], _rectangleSecondPoints[i], true);
-        faceRectangle.shaderCor = _shaderTresMosqueteiros;
-      }
-    }
-
-    private void OnLoadUseLight()
-    {
-      //for (int i = 0; i < _faceVertices.Count; i++)
-      //{
-        _vertexBufferObject_light = GL.GenBuffer();
-        GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject_light);
-        GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
-
-        {
-          _vaoModel = GL.GenVertexArray();
-          GL.BindVertexArray(_vaoModel);
-
-          var positionLocation = _lightingShader.GetAttribLocation("aPos");
-          GL.EnableVertexAttribArray(positionLocation);
-          // Remember to change the stride as we now have 6 floats per vertex
-          GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
-          
-          // We now need to define the layout of the normal so the shader can use it
-          var normalLocation = _lightingShader.GetAttribLocation("aNormal");
-          GL.EnableVertexAttribArray(normalLocation);
-          GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
-        }
-
-        {
-          _vaoLamp = GL.GenVertexArray();
-          GL.BindVertexArray(_vaoLamp);
-          
-          var positionLocation = _lampShader.GetAttribLocation("aPos");
-          GL.EnableVertexAttribArray(positionLocation);
-          
-          GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
-        }
-      //}
     }
 
 #if CG_Gizmo
