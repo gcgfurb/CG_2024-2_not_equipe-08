@@ -153,6 +153,7 @@ namespace CG_Biblioteca
           // bBox.Atualizar(matrizGlobal, pontosLista);
 #if CG_Gizmo
 #if CG_BBox
+          bBox.Atualizar(matrizGlobal, pontosLista);
           bBox.Desenhar();
 #endif
 #endif
