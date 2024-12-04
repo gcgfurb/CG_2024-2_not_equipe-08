@@ -12,61 +12,71 @@ namespace gcgcg
   internal class Cubo : Objeto
   {
     Ponto4D[] vertices;
-    // int[] indices;
-    // Vector3[] normals;
-    // int[] colors;
+
     private readonly float[] _frontFaceVertices =
     [
-      // Position         Texture coordinates
-      -1.0005f, -1.0005f, 1.0005f, 0.0f, 0.0f,
-      1.0005f, -1.0005f, 1.0005f, 1.0f, 0.0f,
-      1.0005f, 1.0005f, 1.0005f, 1.0f, 1.0f,
-      -1.0005f, 1.0005f, 1.0005f, 0.0f, 1.0f,
+      // Positions          Normals              Texture coords
+      -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+       0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
+       0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+       0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+      -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
+      -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f
     ];
     
     private readonly float[] _backFaceVertices =
     [
-      // Position         Texture coordinates
-      -1.0005f, -1.0005f, -1.0005f, 0.0f, 0.0f,
-      1.0005f, -1.0005f, -1.0005f, 1.0f, 0.0f,
-      1.0005f, 1.0005f, -1.0005f, 1.0f, 1.0f,
-      -1.0005f, 1.0005f, -1.0005f, 0.0f, 1.0f
+      // Positions          Normals              Texture coords
+      -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
+       0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f, 0.0f,
+       0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f, 1.0f,
+       0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f, 1.0f,
+      -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f, 1.0f,
+      -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f, 0.0f
     ];
 
     private readonly float[] _topFaceVertices =
     [
-      // Position         Texture coordinates
-      -1.0005f, 1.0005f, 1.0005f, 0.0f, 0.0f,
-      1.0005f, 1.0005f, -1.0005f, 1.0f, 1.0f,
-      1.0005f, 1.0005f, 1.0005f, 1.0f, 0.0f,
-      -1.0005f, 1.0005f, -1.0005f, 0.0f, 1.0f
+      // Positions          Normals              Texture coords
+      -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+      -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+      -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+      -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+      -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+      -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f
     ];
 
     private readonly float[] _bottomFaceVertices =
     [
-      // Position         Texture coordinates
-      1.0005f, -1.0005f, -1.0005f, 0.0f, 0.0f,
-      -1.0005f, -1.0005f, 1.0005f, 1.0f, 1.0f,
-      -1.0005f, -1.0005f, -1.0005f, 1.0f, 0.0f,
-      1.0005f, -1.0005f, 1.0005f, 0.0f, 1.0f
+      // Positions          Normals              Texture coords
+      0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+      0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+      0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+      0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+      0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+      0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f
     ];
 
     public readonly float[] _rightFaceVertices =
     [
-      // Position         Texture coordinates
-      1.0005f, -1.0005f, -1.0005f, 0.0f, 0.0f,
-      1.0005f, 1.0005f, 1.0005f, 1.0f, 1.0f,
-      1.0005f, -1.0005f, 1.0005f, 1.0f, 0.0f,
-      1.0005f, 1.0005f, -1.0005f, 0.0f, 1.0f
+      // Positions          Normals              Texture coords
+      -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+       0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
+       0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+       0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+      -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
+      -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f
     ];
 
     public readonly float[] _leftFaceVertices =
     [
-      // Position         Texture coordinates
-      -1.0005f, -1.0005f, 1.0005f, 0.0f, 0.0f,
-      -1.0005f, 1.0005f, -1.0005f, 1.0f, 1.0f,
-      -1.0005f, -1.0005f, -1.0005f, 1.0f, 0.0f,
-      -1.0005f, 1.0005f, 1.0005f, 0.0f, 1.0f
+      // Positions          Normals              Texture coords
+      -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
+       0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
+       0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+       0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+      -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
+      -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
     ];
 
     private readonly uint[] _frontFaceIndices =
